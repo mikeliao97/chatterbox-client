@@ -3,10 +3,20 @@
   <head>
     <meta charset="utf-8">
     <title>chatterbox</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="styles/styles.css">
+    <!-- Latest compiled and minified CSS -->
+
 
     <!-- dependencies -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
     <script>
       // YOU DO NOT NEED TO EDIT THIS CODE
       if (!/(&|\?)username=/.test(window.location.search)) {
@@ -24,9 +34,30 @@
   </head>
   <body>
     <div id="main">
-      <h1>chatterbox</h1>
+      <h1>Chatterbox</h1>
       <!-- Your HTML goes here! -->
+      <!-- current room !-->
+      <div class="form-group">
+        <label for="rooms">Rooms</label>
+        <select class="form-control" id="rooms">
+          <option>testRoom</option>
+        </select>
+      </div>
+
+      <!-- form for typing out message !-->
+     <div class="form-group">
+        <textarea class="form-control" rows="5" id="comment"></textarea>
+        <button class="btn btn-primary" for="comment">Submit</button>
+     </div>
+
+      <!--Displaying all messages !-->
+ 
     </div>
-    <div id="chats"></div>
+    <div id="chats">
+      
+      <h1> Chats </h1>
+
+    </div>
+
   </body>
 </html>
