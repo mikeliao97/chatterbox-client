@@ -6,7 +6,7 @@ body {
 }
 
 #main, #chats {
-    width: 500px;
+    width: 700px;
     margin: auto;
     text-align: left;
     background: white;
@@ -88,3 +88,18 @@ form input[type=text] {
     background-color: #0090da;
 }
 
+label {
+    display: inline;
+}
+
+#rooms {
+    width: 125px;
+}
+
+.form-group {
+    margin: 30px 0;
+}
+
+button {
+    float: right;
+}
