@@ -73,8 +73,12 @@ app.clearMessages = function() {
 };
 
 app.renderMessage = function(message) {
-  var username = message.username;
-  var text = message.text;
+  message = message;
+  var username = escapeHtml(message.username);
+  var text = escapeHtml(message.text);
+
+  // var username = message.username;
+  // var text = message.text;
   var userStr = "<a class='username'>" + username + "</a>";
   var messageStr = "<p>" + text + "</p>";
   var resultStr = userStr + messageStr;
@@ -87,6 +91,22 @@ app.renderRoom = function(room) {
   $('#roomSelect').append('<p>' + room + '</p>');
 };
 
+var entityMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+  '/': '&#x2F;',
+  '`': '&#x60;',
+  '=': '&#x3D;'
+};
+
+function escapeHtml (string) {
+  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    return entityMap[s];
+  });
+}
 //Bug need to fix if CSS changes
 app.renderEverything = function() {
 	app.clearMessages();
