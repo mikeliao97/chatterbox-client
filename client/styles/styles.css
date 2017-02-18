@@ -87,7 +87,6 @@ form input[type=text] {
     color: #fff;
     background-color: #0090da;
 }
-
 label {
     display: inline;
 }
@@ -102,4 +101,12 @@ label {
 
 button {
     float: right;
+}
+#room-button {
+    margin-top: -35px;
+    margin-left: 200px;
+    float:left;
+}
+#refresh {
+    margin-top: -35px;
 }

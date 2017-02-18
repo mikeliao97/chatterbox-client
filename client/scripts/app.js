@@ -13,6 +13,16 @@ app.init = function() {
 	  app.handleSubmit(); 
 	});
 
+  $('html').on('click', '#room-button', function () {
+    console.log("Button clicked!!");    
+    var answer = prompt("Enter name for new room");
+    app.renderRoom(answer);
+  });
+
+  $('html').on('click', '#refresh', function () {
+    console.log("Button clicked!!");    
+    app.renderEverything();
+  });
 
   //On room change rerender
   $('html').on('change', 'select', function() {
@@ -20,6 +30,8 @@ app.init = function() {
   	app.renderEverything();
   })
 };
+
+app.friends = {};
 
 app.send = function(message) {
   // This is the url you should use to communicate with the parse API server.
@@ -80,6 +92,11 @@ app.renderMessage = function(message) {
   // var username = message.username;
   // var text = message.text;
   var userStr = "<a class='username'>" + username + "</a>";
+  if (this.friends[username] === true) {
+      username = '<b>' + username + '</b>'
+      var userStr = "<a class='username'>" + username + "</a>";
+  }
+
   var messageStr = "<p>" + text + "</p>";
   var resultStr = userStr + messageStr;
   $('#chats').append(resultStr);
@@ -88,7 +105,7 @@ app.renderMessage = function(message) {
 };
 
 app.renderRoom = function(room) {
-  $('#roomSelect').append('<p>' + room + '</p>');
+  $('#rooms').append('<option>' + room + '</option>');
 };
 
 var entityMap = {
@@ -132,8 +149,12 @@ app.handleSubmit = function() {
 };
 
 app.handleUsernameClick = function () {
-  $('body').on('click', 'a', function() {
-    console.log(this);
+  $('html').on('click', 'a', function() {
+    debugger;
+    // console.log(this);
+    var friend = this.text;
+    console.log("value: " + this.text);
+    app.friends[friend] = true;  
     $('#friends').append('<p>' + this.text + '</p>');
   });
 };
