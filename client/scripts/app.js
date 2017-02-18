@@ -79,7 +79,7 @@ app.handleSubmit = function() {
     message = $('#message')[0].value;
   }
   
-  var username = window.location.search;
+  var username = window.location.search.substring(10);
   if($('#rooms').length > 0) {
     var room = $('#rooms')[0].value;
   }
@@ -106,6 +106,11 @@ app.handleUsernameClick = function () {
     $('#friends').append('<p>' + this.text + '</p>');
   });
 };
+
+// $('body').on('click', '#button', function () {
+//   console.log("Button clicked!!");    
+//   app.handleSubmit(); 
+// });
 
 
 
