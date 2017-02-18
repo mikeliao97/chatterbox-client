@@ -32,6 +32,7 @@ app.init = function() {
 };
 
 app.friends = {};
+app.rooms = {'testRoom': true, 'lobby': true};
 
 app.send = function(message) {
   // This is the url you should use to communicate with the parse API server.
@@ -59,12 +60,19 @@ app.fetch = function() {
   	data: {'order': '-createdAt', limit: '1000'},
     datatype: 'jsonp',
 	success: function (data) {
-		//Only display tweeets from the currently selected room number so.
-		var currentRoom = $('#rooms')[0].value;	
+		//Only display tweeets from the currently selected room number so.        
+		    var currentRoom = $('#rooms')[0].value;	
         console.log(data);
 
 	    for (var a = 0; a < data.results.length; a++) {
 	    	message = data.results[a];
+
+        //check if the message is from a roomthat we currently do not have
+        if (app.rooms[message.roomname] === undefined) {
+          app.renderRoom(message.roomname);
+          app.rooms[message.roomname] = true;
+        }
+
 	    	//Only render messages corresponding tothe current room
 	    	if (message.roomname === currentRoom) { 
 	      		app.renderMessage(data.results[a]);
@@ -89,19 +97,30 @@ app.renderMessage = function(message) {
   var username = escapeHtml(message.username);
   var text = escapeHtml(message.text);
 
-  // var username = message.username;
-  // var text = message.text;
-  var userStr = "<a class='username'>" + username + "</a>";
-  if (this.friends[username] === true) {
-      username = '<b>' + username + '</b>'
-      var userStr = "<a class='username'>" + username + "</a>";
-  }
+  var container = $('<div>');
+  
+  container.append("<a class='username'>" + username + "</a>");
 
-  var messageStr = "<p>" + text + "</p>";
-  var resultStr = userStr + messageStr;
-  $('#chats').append(resultStr);
-  // var node = document.getElementById('#chats');
-  // node.appendChild(message);
+  if (app.friends[username] === true) {
+    container.append("<p style='font-weight:bold'>" + text + "</p>");
+  } else {
+    container.append("<p>" + text + "</p>");
+  }
+  
+  $('#chats').append(container);
+
+  // var userStr = "<a class='username'>" + username + "</a>";
+  // var messageStr;
+
+  // if (app.friends[username] === true) {
+  //   //add the class to the div
+  //   messageStr = "<p style='font-weight:bold'>" + text + "</p>";
+  // } else {
+  //   messageStr = "<p>" + text + "</p>";
+  // }
+  
+  // var resultStr = userStr + messageStr;
+  // $('#chats').append(resultStr);
 };
 
 app.renderRoom = function(room) {
@@ -150,12 +169,12 @@ app.handleSubmit = function() {
 
 app.handleUsernameClick = function () {
   $('html').on('click', 'a', function() {
-    debugger;
     // console.log(this);
     var friend = this.text;
+    app.friends[friend] = true;
     console.log("value: " + this.text);
-    app.friends[friend] = true;  
     $('#friends').append('<p>' + this.text + '</p>');
+    app.renderEverything();
   });
 };
 
