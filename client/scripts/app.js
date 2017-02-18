@@ -5,11 +5,10 @@ app.init = function() {
   // this.handleSubmit();
   this.fetch();
   this.handleUsernameClick();
-  $('body').on('click', '#button', function () {
-    console.log("Button clicked!!");    
-    app.handleSubmit(); 
-  });
-
+  $('html').on('click', '#button', function () {
+  	  console.log("Button clicked!!");    
+	  app.handleSubmit(); 
+	});
 };
 
 app.send = function(message) {
@@ -21,6 +20,7 @@ app.send = function(message) {
     data: JSON.stringify(message), 
     success: function (data) {
       console.log('chatterbox: Message sent');
+      app.renderEverything();
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -72,6 +72,17 @@ app.renderRoom = function(room) {
   $('#roomSelect').append('<p>' + room + '</p>');
 };
 
+
+
+app.renderEverything = function() {
+	app.clearMessages();
+	app.fetch();
+}
+
+
+
+
+
 app.handleSubmit = function() {
   var message;
   var room;
@@ -86,17 +97,6 @@ app.handleSubmit = function() {
   
   var finalMessage = {username: username, text: message, roomname: room};
   console.log("The message we're sending:" + JSON.stringify(finalMessage));
-  // $('#button').click(function() {
-  //   app.send(finalMessage);
-  //   console.log("Button clicked!!");
-  //   // app.handleSubmit();
-  // });
-  // debugger;
-  // $('body').on('click', '#button', function () {
-  //   app.send(finalMessage);
-  //   console.log("Button clicked!!");    
-  // })
-  // console.log("submitted!!!!!");
   app.send(finalMessage);
 };
 
@@ -107,10 +107,7 @@ app.handleUsernameClick = function () {
   });
 };
 
-// $('body').on('click', '#button', function () {
-//   console.log("Button clicked!!");    
-//   app.handleSubmit(); 
-// });
+
 
 
 
