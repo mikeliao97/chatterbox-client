@@ -5,11 +5,20 @@ app.init = function() {
   // this.handleSubmit();
   this.fetch();
   this.handleUsernameClick();
-  $('body').on('click', '#button', function () {
-    console.log("Button clicked!!");    
-    app.handleSubmit(); 
-  });
 
+
+  //On submit handle the submission
+  $('html').on('click', '#button', function () {
+  	  console.log("Button clicked!!");    
+	  app.handleSubmit(); 
+	});
+
+
+  //On room change rerender
+  $('html').on('change', 'select', function() {
+  	console.log("Select option change");
+  	app.renderEverything();
+  })
 };
 
 app.send = function(message) {
@@ -21,6 +30,7 @@ app.send = function(message) {
     data: JSON.stringify(message), 
     success: function (data) {
       console.log('chatterbox: Message sent');
+      app.renderEverything();
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -34,17 +44,20 @@ app.fetch = function() {
 	// This is the url you should use to communicate with the parse API server.
 	url: 'http://parse.sfm6.hackreactor.com/chatterbox/classes/messages',
 	type: 'GET',
-  data: {'order': '-createdAt', limit: '1000'},
+  	data: {'order': '-createdAt', limit: '1000'},
     datatype: 'jsonp',
 	success: function (data) {
-    console.log(data);
-	  // for (var key in data) {
-      // .renderMessage(data);
-    // }.
+		//Only display tweeets from the currently selected room number so.
+		var currentRoom = $('#rooms')[0].value;	
+        console.log(data);
 
-    for (var a = 0; a < data.results.length; a++) {
-      app.renderMessage(data.results[a]);
-    }
+	    for (var a = 0; a < data.results.length; a++) {
+	    	message = data.results[a];
+	    	//Only render messages corresponding tothe current room
+	    	if (message.roomname === currentRoom) { 
+	      		app.renderMessage(data.results[a]);
+	      	}
+	    }
 	},
 	error: function (data) {
 	  // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -52,6 +65,8 @@ app.fetch = function() {
 	}
   });
 };
+
+//To render messages from a certain room:
 
 app.clearMessages = function() {
   $('#chats').empty();
@@ -72,6 +87,13 @@ app.renderRoom = function(room) {
   $('#roomSelect').append('<p>' + room + '</p>');
 };
 
+//Bug need to fix if CSS changes
+app.renderEverything = function() {
+	app.clearMessages();
+	app.fetch();
+}
+
+
 app.handleSubmit = function() {
   var message;
   var room;
@@ -79,24 +101,13 @@ app.handleSubmit = function() {
     message = $('#message')[0].value;
   }
   
-  var username = window.location.search;
+  var username = window.location.search.substring(10);
   if($('#rooms').length > 0) {
     var room = $('#rooms')[0].value;
   }
   
   var finalMessage = {username: username, text: message, roomname: room};
   console.log("The message we're sending:" + JSON.stringify(finalMessage));
-  // $('#button').click(function() {
-  //   app.send(finalMessage);
-  //   console.log("Button clicked!!");
-  //   // app.handleSubmit();
-  // });
-  // debugger;
-  // $('body').on('click', '#button', function () {
-  //   app.send(finalMessage);
-  //   console.log("Button clicked!!");    
-  // })
-  // console.log("submitted!!!!!");
   app.send(finalMessage);
 };
 
@@ -106,6 +117,8 @@ app.handleUsernameClick = function () {
     $('#friends').append('<p>' + this.text + '</p>');
   });
 };
+
+
 
 
 
