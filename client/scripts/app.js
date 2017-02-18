@@ -2,23 +2,30 @@
 var app = {};
 
 app.init = function() {
-  this.handleSubmit();
+  // this.handleSubmit();
   this.fetch();
+  this.handleUsernameClick();
+  $('body').on('click', '#button', function () {
+    console.log("Button clicked!!");    
+    app.handleSubmit(); 
+  });
+
 };
 
 app.send = function(message) {
+  // This is the url you should use to communicate with the parse API server.
   $.ajax({
-	// This is the url you should use to communicate with the parse API server.
-	url: 'http://parse.sfm6.hackreactor.com/chatterbox/classes/messages',
-	type: 'POST',
-	contentType: 'application/json',
-	success: function (data) {
-	  console.log('chatterbox: Message sent');
-	},
-	error: function (data) {
-	  // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-	  console.error('chatterbox: Failed to send message', data);
-	}
+    url: 'http://parse.sfm6.hackreactor.com/chatterbox/classes/messages',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(message), 
+    success: function (data) {
+      console.log('chatterbox: Message sent');
+    },
+    error: function (data) {
+      // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+      console.error('chatterbox: Failed to send message', data);
+    }
   });
 };
 
@@ -26,9 +33,8 @@ app.fetch = function() {
   $.ajax({
 	// This is the url you should use to communicate with the parse API server.
 	url: 'http://parse.sfm6.hackreactor.com/chatterbox/classes/messages',
-  limit: 1000,
 	type: 'GET',
-  data: {'order': '-createdAt'},
+  data: {'order': '-createdAt', limit: '1000'},
     datatype: 'jsonp',
 	success: function (data) {
     console.log(data);
@@ -67,18 +73,45 @@ app.renderRoom = function(room) {
 };
 
 app.handleSubmit = function() {
-  var message = $('#message')[0].value;
-  var button = $('#button')[0];
+  var message;
+  var room;
+  if ($('#message').length > 0) {
+    message = $('#message')[0].value;
+  }
+  
   var username = window.location.search;
-  var room = $('#rooms')[0].value;
+  if($('#rooms').length > 0) {
+    var room = $('#rooms')[0].value;
+  }
   
   var finalMessage = {username: username, text: message, roomname: room};
-
-  $('#button').click(function() {
-    app.send(finalMessage);
-    console.log("Button clicked!!");
-    // app.handleSubmit();
-  });
-
-  console.log("submitted!!!!!");
+  console.log("The message we're sending:" + JSON.stringify(finalMessage));
+  // $('#button').click(function() {
+  //   app.send(finalMessage);
+  //   console.log("Button clicked!!");
+  //   // app.handleSubmit();
+  // });
+  // debugger;
+  // $('body').on('click', '#button', function () {
+  //   app.send(finalMessage);
+  //   console.log("Button clicked!!");    
+  // })
+  // console.log("submitted!!!!!");
+  app.send(finalMessage);
 };
+
+app.handleUsernameClick = function () {
+  $('body').on('click', 'a', function() {
+    console.log(this);
+    $('#friends').append('<p>' + this.text + '</p>');
+  });
+};
+
+
+
+app.init();
+
+
+
+
+
